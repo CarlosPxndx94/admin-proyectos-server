@@ -17,13 +17,13 @@ exports.autenticarUsuario = async(req, res) => {
         let user = await User.findOne({ email });
 
         if (!user) {
-            res.status(400).json({ msg: 'El usuario no existe' });
+            res.status(400).json({ msg: 'Usuario o contraseña incorrecta' });
         }
 
         const passCorrecto = await bcryptjs.compare(password, user.password);
 
         if (!passCorrecto) {
-            res.status(400).json({ msg: 'Password incorrecta' });
+            res.status(400).json({ msg: 'Usuario o contraseña incorrecta' });
         }
 
         //Crear y firmar token
@@ -46,5 +46,17 @@ exports.autenticarUsuario = async(req, res) => {
 
     } catch (error) {
         console.log(error);
+        res.status(500).json({ msg: 'Hubo un error' });
     }
 };
+
+exports.usuarioAutenticado = async(req, res) => {
+    try {
+        const user = await User.findById(req.user.id).select('-password');
+        console.log(req);
+        res.json({ user });
+    } catch (error) {
+        console.log(error);
+        res.status(500).json({ msg: 'Hubo un error' });
+    }
+}
