@@ -39,7 +39,7 @@ exports.postTarea = async(req, res) => {
 exports.getTareas = async(req, res) => {
     try {
 
-        const { proyecto } = req.body;
+        const { proyecto } = req.query;
         //revisar el ID
         let proyectoExiste = await Proyecto.findById(proyecto);
 
@@ -70,10 +70,10 @@ exports.putTarea = async(req, res) => {
     }
 
     try {
-        const { id, nombre, proyecto, estado } = req.body;
+        const { _id, nombre, proyecto, estado } = req.body;
 
         //revisar el ID de la tarea
-        let tarea = await Tarea.findById(id);
+        let tarea = await Tarea.findById(_id);
 
         //si la tarea existe
         if (!tarea) {
@@ -95,11 +95,11 @@ exports.putTarea = async(req, res) => {
 
         const nuevaTarea = {};
 
-        if (nombre) nuevaTarea.nombre = nombre;
-        if (estado) nuevaTarea.estado = estado;
+        nuevaTarea.nombre = nombre;
+        nuevaTarea.estado = estado;
 
         //actualizar
-        tarea = await Tarea.findByIdAndUpdate({ _id: id }, { $set: nuevaTarea }, { new: true });
+        tarea = await Tarea.findByIdAndUpdate({ _id }, { $set: nuevaTarea }, { new: true });
         res.json({ tarea });
     } catch (error) {
         console.log(error);
@@ -110,8 +110,7 @@ exports.putTarea = async(req, res) => {
 //Eliminar tarea
 exports.deleteTarea = async(req, res) => {
     try {
-        const { id, proyecto } = req.body;
-
+        const { id, proyecto } = req.query;
         //revisar el ID de la tarea
         let tarea = await Tarea.findById(id);
 

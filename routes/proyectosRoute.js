@@ -10,7 +10,7 @@ router.post('/',
     authMiddleware, [
         check('nombre', 'El nombre del proyecto es obligatorio').not().isEmpty()
     ],
-    proyectoController.putProyecto
+    proyectoController.postProyecto
 );
 
 router.get('/',
